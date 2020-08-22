@@ -231,8 +231,12 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-    int TMIN = 0x80000000;
-    return !((x - y) & TMIN) || (x == y) || ((x - y) == (y - x));
+    int diff_sign = ((x >> 31) & 1)         // x < 0
+                    & (((y >> 31) & 1) ^ 1);// y > 0
+    int same_sign = (((x >> 31) & 1)        // same equals 1
+                    ^ ((y >> 31) & 1) ^ 1); // not the same euqals 0
+    int x_minus_y = (((x + (~y)) >> 31) & 1);
+    return diff_sign || ( same_sign && x_minus_y);
 }
 //4
 /* 
