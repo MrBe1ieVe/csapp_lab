@@ -316,7 +316,29 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+    int exp_const = 0x7f800000; // 01111111100000000000000000000000
+    int frac_const = 0x7fffff;  // 00000000011111111111111111111111
+    int exp = (uf & exp_const)>>23; // get exp part
+    int frac = uf & frac_const;     // get frac part
+    frac = frac | 0x800000;         //present 1.frac e.g. frac = 110, will be 1.110
+    int sign = uf >> 31;            // get sign
+    int sign_bit = sign << 31;
+    int shift_num = exp - 127;
+
+    if (shift_num < 0)
+        return 0;
+    if (shift_num > 31)
+        return 0x80000000u;
+
+    if (shift_num > 23)
+        frac = frac << (shift_num - 23);
+    else
+        frac = (frac >> (23 - shift_num));
+
+    if (sign)
+        return ~frac+1;
+    else
+        return frac;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
