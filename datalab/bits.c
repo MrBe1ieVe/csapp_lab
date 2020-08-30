@@ -277,7 +277,7 @@ int howManyBits(int x) {
     x = x >> b2;
     b1 = (!!(x >> 1));
     x = x >> b1;
-    return b16 + b8 + b4 + b2 + b1 + x + 1;
+    return b16 + b8 + b4 + b2 + b1 + x + 1; // 1 present the sign bit
 }
 //float
 /* 
@@ -292,7 +292,16 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+    int exp_const = 0x7f800000; // 01111111100000000000000000000000
+    int frac_const = 0x7fffff;  // 00000000011111111111111111111111
+    int exp = (uf & exp_const)>>23; // get exp part
+    int frac = uf & frac_const;     // get frac part
+    int sign = uf >> 31;            // get sign
+    int sign_bit = sign << 31;
+    if (exp == 0) return uf << 1 | sign_bit; // exp = 0, not a correct format
+    if (exp == 255) return uf; // When argument is NaN, return argument
+    return ((exp + 1) << 23) | frac | sign_bit;// put together
+
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
