@@ -248,7 +248,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+    return ((x | (~x + 1))>>31)+1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -263,7 +263,21 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+    int b16, b8, b4, b2, b1;
+    int sign = x >> 31;
+    x = (sign & ~x) | (~sign & x); // if x > 0, then x = x, else x = ~x
+
+    b16 = (!!(x >> 16)) << 4; // if in high 16,num exist,then b16 = 16 (16 = 2^4),else b16 = 0
+    x = x >> b16;
+    b8 = (!!(x >> 8)) << 3;
+    x = x >> b8;
+    b4 = (!!(x >> 4)) << 2;
+    x = x >> b4;
+    b2 = (!!(x >> 2)) << 1;
+    x = x >> b2;
+    b1 = (!!(x >> 1));
+    x = x >> b1;
+    return b16 + b8 + b4 + b2 + b1 + x + 1;
 }
 //float
 /* 
