@@ -317,3 +317,22 @@ unsigned floatPower2(int x) {
 
 
 
+## bomblab
+
+### Phase_1
+
+`Border relations with Canada have never been better.`
+
+### Phase_2
+
+看phase_2函数里
+
+![image-20200905200221312](img/image-20200905200221312.png)
+
+![image-20200905201155428](img/image-20200905201155428.png)
+
+读取了六个数字，结合f5生成的伪代码，可以看到讲读取的数据存入到栈种。调用结束后会将[rsp]与1进行比较，所以第一个数必须是1。
+
+![image-20200905202536189](img/image-20200905202536189.png)
+
+标黄的地方，将[rsp+4]放到rbx中，然后在0x400F17这里，可以看到将[rbx-4]，也就是[rsp]放入eax中，再eax自加，随后将exa和[rbx]相比较，所以也就是读取的数字中，第二个数字是第一个数字*2，以此类推，一直到rbx = rbp 也就是直到rsp + 18h，也就是比对完这读取的六个数字，然后再结束循环解除炸弹。
