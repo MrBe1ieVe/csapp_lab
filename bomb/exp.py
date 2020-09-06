@@ -1,0 +1,18 @@
+from pwn import *
+sh = process("./bomb")
+payload = 'Border relations with Canada have never been better.'
+sh.recvuntil('day!')
+sh.sendline(payload)
+sleep(0.1)
+sh.recvuntil('one?')
+sh.sendline('1 2 4 8 16 32')
+sleep(0.1)
+sh.recvuntil('going!')
+sh.sendline('0 207')
+sh.recvuntil('there!')
+sh.sendline('7 0')
+sh.recvuntil('one.')
+sh.sendline('9on567')
+sh.recvuntil('next...')
+sh.sendline('4 3 2 1 6 5')
+sh.interactive()
